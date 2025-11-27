@@ -7,7 +7,8 @@ export function untrust(program: Command) {
     .description("Untrust a given address")
     .argument("<address>", "The address to untrust")
     .action(async (address) => {
-      const { runner, core } = await initSdk();
+      const { runner, core, sdk } = await initSdk();
+      const avatar = await sdk.getAvatar(runner.address!);
 
       console.log("Checking current trust status...");
       const isTrusted = await core.hubV2.isTrusted(runner.address!, address);
@@ -19,14 +20,13 @@ export function untrust(program: Command) {
         console.log("Address is not currently trusted. No action needed.");
         return;
       }
-      const tx = core.hubV2.trust(address, BigInt(0));
 
       console.log("Sending untrust transaction...");
-      const txResponse = await runner.sendTransaction!([tx]);
-      console.log("Transaction sent!");
+      const txResponse = await avatar.trust.remove(address);
+      console.log("Transaction confirmed!");
       console.log(`   Transaction hash: ${txResponse.transactionHash}`);
 
-      console.log("Verifying untrust...");
+      console.log("Verifying trust status...");
       const newTrustStatus = await core.hubV2.isTrusted(
         runner.address!,
         address
@@ -39,7 +39,7 @@ export function untrust(program: Command) {
         console.log("🎉 Successfully untrusted the address!");
       } else {
         console.log(
-          "⚠️  Warning: Address is still trusted. The transaction may need more time to be processed."
+          "⚠️  Warning: Address is still trusted. The transaction may need more time to be indexed.\nPlease wait a few moments and check again."
         );
       }
     });

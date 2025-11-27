@@ -8,7 +8,8 @@ import {
   type Config,
   type EncryptedConfig,
 } from "./store.ts";
-import { Core } from "@aboutcircles/sdk-core";
+import { Core, circlesConfig } from "@aboutcircles/sdk-core";
+import { Sdk } from "@aboutcircles/sdk";
 import { readHiddenPassword } from "./passwordInput.ts";
 
 export const publicClient = createPublicClient({
@@ -47,11 +48,12 @@ export async function initSdk() {
   const runner = new SafeContractRunner(
     publicClient,
     PK,
-    "https://rpc.gnosischain.com",
+    "https://rpc.aboutcircles.com/",
     SAFE_ADDRESS
   );
 
   await runner.init();
   const core = new Core();
-  return { runner, core };
+  const sdk = new Sdk(circlesConfig[100], runner);
+  return { runner, core, sdk };
 }
