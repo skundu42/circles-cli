@@ -9,33 +9,24 @@ export function untrust(program: Command) {
     .action(async (address) => {
       const { runner, core } = await initSdk();
 
-      console.log("🔍 Checking current trust status...");
+      console.log("Checking current trust status...");
       const isTrusted = await core.hubV2.isTrusted(runner.address!, address);
       console.log(
         `   Current trust status: ${isTrusted ? "TRUSTED" : "NOT TRUSTED"}\n`
       );
 
       if (!isTrusted) {
-        console.log("ℹ️  Address is not currently trusted. No action needed.");
+        console.log("Address is not currently trusted. No action needed.");
         return;
       }
-
-      console.log("📝 Creating untrust transaction...");
       const tx = core.hubV2.trust(address, BigInt(0));
 
-      console.log("   Transaction details:");
-      console.log(`   - To: ${tx.to}`);
-      console.log(`   - Data: ${tx.data}`);
-      console.log(`   - Value: ${tx.value || 0}\n`);
-
-      console.log("🚀 Sending untrust transaction...");
+      console.log("Sending untrust transaction...");
       const txResponse = await runner.sendTransaction!([tx]);
-      console.log("✅ Transaction sent!");
+      console.log("Transaction sent!");
       console.log(`   Transaction hash: ${txResponse.transactionHash}`);
-      console.log(`   Block number: ${txResponse.blockNumber}`);
-      console.log(`   Block hash: ${txResponse.blockHash}\n`);
 
-      console.log("🔍 Verifying untrust...");
+      console.log("Verifying untrust...");
       const newTrustStatus = await core.hubV2.isTrusted(
         runner.address!,
         address

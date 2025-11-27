@@ -1,13 +1,13 @@
 import { Command } from "commander";
 import { saveConfig } from "../config/store.ts";
-import readline from "readline/promises";
+import { readHiddenPassword } from "../config/passwordInput.ts";
 
 export function config(program: Command) {
   program
     .command("config")
     .description("Configure the CLI with your Private Key and Safe Address")
     .option("-p, --private-key <key>", "Your Private Key")
-    .option("-s, --safe-address <address>", "Your Safe Address")
+    .option("-s, --safe-address <address>", "Your Circles Safe Address")
     .option("--password <password>", "Password to encrypt the configuration")
     .action(async (options) => {
       if (!options.privateKey && !options.safeAddress) {
@@ -21,14 +21,9 @@ export function config(program: Command) {
 
       let password = options.password;
       if (!password) {
-        const rl = readline.createInterface({
-          input: process.stdin,
-          output: process.stdout,
-        });
-        password = await rl.question(
+        password = await readHiddenPassword(
           "Enter a password to encrypt your configuration (leave empty for no encryption): "
         );
-        rl.close();
       }
 
       saveConfig(newConfig, password);

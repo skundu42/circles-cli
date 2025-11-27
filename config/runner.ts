@@ -2,9 +2,14 @@ import "dotenv/config";
 import { SafeContractRunner } from "@aboutcircles/sdk-runner";
 import { createPublicClient, http } from "viem";
 import { gnosis } from "viem/chains";
-import { loadConfigRaw, decrypt, Config, EncryptedConfig } from "./store.ts";
+import {
+  loadConfigRaw,
+  decrypt,
+  type Config,
+  type EncryptedConfig,
+} from "./store.ts";
 import { Core } from "@aboutcircles/sdk-core";
-import readline from "readline/promises";
+import { readHiddenPassword } from "./passwordInput.ts";
 
 export const publicClient = createPublicClient({
   chain: gnosis,
@@ -16,14 +21,9 @@ export async function initSdk() {
   let config: Config = {};
 
   if ("encrypted" in configRaw && configRaw.encrypted) {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-    const password = await rl.question(
+    const password = await readHiddenPassword(
       "Enter password to decrypt configuration: "
     );
-    rl.close();
 
     try {
       const decryptedJson = decrypt(configRaw as EncryptedConfig, password);
