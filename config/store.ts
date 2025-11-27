@@ -74,11 +74,15 @@ export function loadConfigRaw(): Config | EncryptedConfig {
 export function saveConfig(config: Config, password?: string) {
   let dataToSave: Config | EncryptedConfig = config;
 
-  if (password) {
+  if (password && password.length > 0) {
     const jsonString = JSON.stringify(config);
     dataToSave = encrypt(jsonString, password);
   }
 
-  fs.writeFileSync(CONFIG_FILE, JSON.stringify(dataToSave, null, 2));
+  fs.writeFileSync(
+    CONFIG_FILE,
+    JSON.stringify(dataToSave, null, 2),
+    { mode: 0o600 } // Only owner can read/write
+  );
   console.log(`Configuration saved to ${CONFIG_FILE}`);
 }
