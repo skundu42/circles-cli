@@ -4,6 +4,8 @@ import { trust } from "./commands/trusting/trust.ts";
 import { untrust } from "./commands/trusting/untrust.ts";
 import { config } from "./commands/config.ts";
 import { mint } from "./commands/minting/mint.ts";
+import { trustRelations } from "./commands/trusting/trustRelations.ts";
+import { getAvatarDetails } from "./commands/avatar/getAvatarDetails.ts";
 
 const program = new Command();
 
@@ -16,5 +18,7 @@ IsHuman(program);
 trust(program);
 untrust(program);
 mint(program);
+trustRelations(program);
+getAvatarDetails(program);
 
 program.parse();
