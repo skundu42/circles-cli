@@ -10,8 +10,8 @@ List of features to add:
 - [x] IsHuman
 - [x] Trust Relations
 - [x] Get Avatar Details
-- [ ] Deploy a group
-- [ ] Fetch group memberships
+- [x] Deploy a group
+- [x] Fetch group memberships
 - [ ] Fetch group holders
 - [ ] fetch all groups
 - [ ] GetTotalBalance

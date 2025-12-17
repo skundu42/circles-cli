@@ -9,7 +9,7 @@ export function getAvatarDetails(program: Command) {
     .argument("<address>", "The address to get the details of")
     .action(async (address) => {
       try {
-        const { sdk, core } = await initSdk({ requireSigner: false });
+        const { sdk, core } = await initSdk();
         const avatar = await sdk.getAvatar(address);
         const avatarDetails = avatar.avatarInfo?.cidV0?.toString();
         if (!avatarDetails) {
